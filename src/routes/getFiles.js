@@ -9,7 +9,7 @@ const {
   deleteDir,
   findData,
 } = require("../funts");
-const { verificaToken } = require("../middelwares/authentication");
+const { verificaToken, verificaTokenImg } = require("../middelwares/authentication");
 
 const Dir = require("../models/dir");
 const File = require("../models/file");
@@ -18,8 +18,9 @@ const User = require("../models/user");
 const fs = require("fs");
 const path = require("path");
 
-app.get("/getMediaFile/:id", verificaToken, (req, res) => {
+app.get("/getMediaFile/:id", verificaTokenImg, (req, res) => {
   let id = req.params.id;
+    console.log('marchando media file')
 
   File.findById(id, (err, filedb) => {
     if (err) {
@@ -44,7 +45,7 @@ app.get("/getMediaFile/:id", verificaToken, (req, res) => {
   });
 });
 
-app.get("/getTextFile/:id", (req, res) => {
+app.get("/getTextFile/:id", verificaToken, (req, res) => {
   let id = req.params.id;
 
   File.findById(id, (err, filedb) => {
@@ -73,5 +74,18 @@ app.get("/getTextFile/:id", (req, res) => {
     }
   });
 });
+
+app.get('/getDataFile/:id', verificaToken, (req, res) => {
+    let id = req.params.id
+    File.findById(id, (err, filedb) => {
+	if (err)  {return res.status(500).json({ok:false, err})}
+
+	return res.json({
+	    ok: true,
+	    filedb
+	})
+    })
+
+})
 
 module.exports = app;

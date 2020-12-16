@@ -5,7 +5,7 @@ let urlDB;
 //if (process.env.NODE_ENV === 'dev') {
 urlDB = 'mongodb://localhost:27017/cloudData';
 //} else {
-//    urlDB = process.env.MONGO_URI;
+//    urlDB = "mongodb+srv://z3hcnas:123@datacloud.cwzgu.mongodb.net/datacloud?retryWrites=true&w=majority"
 //}
 
 process.env.SEED = process.env.SEED || 'clouddata'

@@ -15,6 +15,26 @@ let verificaToken = (req, res, next) => {
     })
 }
 
+let verificaTokenImg = (req, res, next) => {
+    let token = req.query.token
+    console.log(token)
+
+    jwt.verify(token, process.env.SEED, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err
+            })
+        }
+
+	console.log('pasando validacion')
+
+        req.usuario = decoded.usuario
+        next()
+    })
+}
+
 module.exports = {
-    verificaToken
+    verificaToken,
+    verificaTokenImg
 }
