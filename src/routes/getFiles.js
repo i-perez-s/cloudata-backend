@@ -20,7 +20,6 @@ const path = require("path");
 
 app.get("/getMediaFile/:id", verificaTokenImg, (req, res) => {
   let id = req.params.id;
-    console.log('marchando media file')
 
   File.findById(id, (err, filedb) => {
     if (err) {
@@ -30,7 +29,6 @@ app.get("/getMediaFile/:id", verificaTokenImg, (req, res) => {
       });
     }
 
-    console.log(filedb);
     if (!filedb) {
       return res.status(500).json({
         ok: false,
@@ -65,7 +63,6 @@ app.get("/getTextFile/:id", verificaToken, (req, res) => {
             err,
           });
         } else {
-          console.log(data);
           res.send({
             data: data,
           });

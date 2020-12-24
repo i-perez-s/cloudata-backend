@@ -157,7 +157,7 @@ app.get("/getData/:path", verificaToken, async(req, res) => {
 
 app.delete("/file/:id", verificaToken, (req, res) => {
     let id = req.params.id;
-    borrarArchivo(id);
+    borrarArchivo(id, res);
 });
 
 app.delete("/dir/:id", verificaToken, (req, res) => {

@@ -55,6 +55,8 @@ app.post("/shareDirToUser/:idDir/:idUser", verificaToken, (req, res) => {
   let idDir = req.params.idDir;
   let idUser = req.params.idUser;
 
+  console.log(idDir);
+  console.log(idUser);
   Dir.findByIdAndUpdate(
     idDir,
     { $push: { shared: idUser } },
@@ -78,7 +80,7 @@ app.post("/shareDirToUser/:idDir/:idUser", verificaToken, (req, res) => {
 
       return res.json({
         ok: true,
-        filedb,
+        dirrShared: filedb,
       });
     }
   );
@@ -86,6 +88,7 @@ app.post("/shareDirToUser/:idDir/:idUser", verificaToken, (req, res) => {
 
 app.get("/whatIsShared", verificaToken, async (req, res) => {
   let id = req.user._id.toString();
+  console.log(id);
   var data = { files: [], dirs: [] };
 
   await File.find({ shared: { $all: [id] } }, (err, filesdb) => {
@@ -108,15 +111,17 @@ app.get("/whatIsShared", verificaToken, async (req, res) => {
     data.dirs = filesdb;
   });
 
-  return res.json({
-    ok: true,
-    data,
-  });
+  setTimeout(function () {
+    return res.json({
+      ok: true,
+      data,
+    });
+  }, 50);
+
 });
 
 app.get("/dataDirShared/:idDir", async (req, res) => {
   let idDir = req.params.idDir;
-  let data = { dirs: [], files: [] };
 
   Dir.findById(idDir, async (err, dirdb) => {
     if (err) {
@@ -125,31 +130,8 @@ app.get("/dataDirShared/:idDir", async (req, res) => {
         err,
       });
     }
-    let pathDir = dirdb.path;
-    await File.find({ path: pathDir }, (err, datadb) => {
-      if (err) {
-        return res.status(500).json({
-          ok: false,
-          err,
-        });
-      }
-      data.files = datadb;
-    });
 
-    await Dir.find({ path: pathDir }, (err, datadb) => {
-      if (err) {
-        return res.status(500).json({
-          ok: false,
-          err,
-        });
-      }
-      data.dirs = datadb;
-    });
-
-    return res.json({
-      ok: true,
-      data,
-    });
+    findData(res,dirdb.path + '\\' + dirdb.nombre);
   });
 });
 

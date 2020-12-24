@@ -5,6 +5,7 @@ const File = require("./models/file");
 
 function checkErr(res, err) {
   if (err) {
+      console.log(err)
     return res.status(500).json({
       ok: false,
       err,
@@ -38,16 +39,17 @@ function correctPath(initalPath) {
   return initalPath;
 }
 
-function borrarArchivo(id) {
+function borrarArchivo(id, res) {
+    console.log(id)
   File.findByIdAndDelete(id, (err, filedb) => {
     checkErr(res, err);
-
+console.log(filedb)
     try {
       borrarImagen(path.resolve(filedb.path, filedb.nombre));
     } catch (err) {
       return res.json({
         ok: false,
-        err,
+        err: {message: 'no existe el archivo'}
       });
     }
 
@@ -135,7 +137,6 @@ function deleteDir(res, id) {
 
 async function findData(res, pathDir) {
   var data = { files: [], dirs: [] };
-
   await Dir.find({ path: pathDir }, (err, dirsdb) => {
     checkErr(res, err);
       data.dirs = dirsdb
@@ -147,7 +148,7 @@ async function findData(res, pathDir) {
 
 
   setTimeout(function () {
-    return res.json({
+    res.json({
       ok: true,
       carpetas: data.dirs,
       archivos: data.files,
